@@ -1,37 +1,42 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 int powMod(int base,int exp,int mod){
 int result=1;
 base=base%mod;
 while(exp>0){
-    if(exp%2==1){
-        result=(result*base)%mod;
-    }
-    exp=exp>>1;
-    base=(base*base)%mod;
+if(exp%2==1){
+result=(result*base)%mod;
+}
+exp = exp >> 1;
+base = (base * base) % mod;
 }
 return result;
 }
+int gcd(int a , int b){
+return b==0 ? a : gcd(b,a%b);
+}
+int findModInverse(int e,int phi){
+for(int d=1;d<phi;d++){
+if((e*d)%phi==1){
+return d;
+}
+}
+return -1;
+}
 int main(){
-int p,q,m,n,phi,e=7,d=1,C,M,D;
-printf("Enter p and q: ");
-scanf("%d%d",&p,&q);
-printf("Enter the message M: ");
-scanf("%d",&M);
+int C,D,M,N,p=61,q=53,n,phi,e=17;
 n=p*q;
 phi=(p-1)*(q-1);
-while((e*d)%phi!=1){
-d++;
-if(d>phi){
-printf("Couldn't find a valid d. Please check your inputs.\n");
-return 1;
+int d=findModInverse(e,phi);
+if(d==-1){
+printf("Cannot find valid d. Exiting\n");
+return -1;
 }
-}
+printf("Enter the message: ");
+scanf("%d",&M);
 C=powMod(M,e,n);
 D=powMod(C,d,n);
-printf("Given message: %d\n",M);
-printf("Encrypted: %d\n",C);
-printf("Decrypted: %d\n",D);
+printf("Original message: %d\n",M);
+printf("Encrypted message: %d\n",C);
+printf("Decrypted message: %d\n",D);
 return 0;
 }
